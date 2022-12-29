@@ -11,11 +11,10 @@ class GithubHandler:
         self.repo = f'https://api.github.com/repos/{repo}'
         print('Connecting to Repo:', self.repo)
 
-    def iter_github_files(self, path: str = 'contents') -> dict:
+    def iter_github_files(self, path: str = '') -> dict:
         """Given a URL of an endpoint in a Github Repo and a path recursively generates the file items """
-        if Path(path).name.startswith('.'):
-            return
-        response = self.client.get(url := f'{self.repo}/{path}')
+
+        response = self.client.get(url := f'{self.repo}/contents/{path}')
         assert response.status_code == 200, f'Error getting files from URL: {url} ({response.status_code})'
 
         for item in response.json():
@@ -24,9 +23,13 @@ class GithubHandler:
                 print('File:', item["path"])
                 yield item
             elif type_ == 'dir':
-                print('Directory:', item["path"])
+                folder = item['path']
+                if Path(folder).name.startswith('.'):
+                    print('Skipping:', folder)
+                    continue
+                print('Directory:', folder)
                 # List the contents of the directory recursively
-                for x in self.iter_github_files(f"{path}/{item['path']}"):
+                for x in self.iter_github_files(folder):
                     yield x
             else:
                 print(f'Unknown item type: {type_} ({item["path"]})')
