@@ -16,12 +16,13 @@ def main():
     args = parser.parse_args()
 
     print(args.user, args.repo, args.token)
+    args.repo = '/'.join(x for x in args.repo.split('/') if x != args.user)  # remove user from path
     # Set up the API client
     client = requests.Session()
     client.auth = (args.token, '')
 
     # List the contents of the repository
-    url = f'https://api.github.com/repos/{args.user}/{args.repo}/contents'
+    print(url := f'https://api.github.com/repos/{args.user}/{args.repo}/contents')
     response = client.get(url)
 
     if response.status_code != 200:
