@@ -25,7 +25,7 @@ class GithubHandler:
             elif type_ == 'dir':
                 print('Directory:', item["path"])
                 # List the contents of the directory recursively
-                for x in self.iter_github_files(item['path']):
+                for x in self.iter_github_files(f"{path}/{item['path']}"):
                     yield x
             else:
                 print(f'Unknown item type: {type_} ({item["path"]})')
