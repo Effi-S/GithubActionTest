@@ -12,6 +12,8 @@ class GithubHandler:
 
     def iter_github_files(self, path: str = 'contents') -> dict:
         """Given a URL of an endpoint in a Github Repo and a path recursively generates the file items """
+        if path.startswith('.'):
+            return
         response = self.client.get(url := f'{self.repo}/{path}')
         assert response.status_code == 200, f'Error getting files from URL: {url} ({response.status_code})'
 

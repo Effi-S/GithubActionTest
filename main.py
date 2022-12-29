@@ -24,11 +24,9 @@ def main():
             print('(Skipping:', file_name, 'Not a python file)')
             continue
         # Read the python file
-        try:
-            text = github_handler.read_file_url(file_item)
-        except Exception as e:
-            print('Failed Reading:', file_name, e)
-            
+
+        text = github_handler.read_file_url(file_item)
+
         # Create the Issue body
         dummy_body = ''.join(text.splitlines()[-1:])  # Just the last line of the file, for POC
         # Create an Issue
