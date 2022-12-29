@@ -2,6 +2,7 @@
 Example Usage:
 python main.py  --repo ${{ github.repository }} --token ${{ secrets.GITHUB_TOKEN }}
 """
+import argparse
 import git_utils
 
 

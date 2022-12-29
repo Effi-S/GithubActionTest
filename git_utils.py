@@ -1,4 +1,3 @@
-import argparse
 import requests
 
 
@@ -33,12 +32,12 @@ class GithubHandler:
         if isinstance(item, dict):
             item = item['download_url']
         file_response = self.client.get(item)
-        assert file_response.status_code == 200, f'Error Reading file in URL: {response.status_code}'
+        assert file_response.status_code == 200, f'Error Reading file in URL: {file_response.status_code}'
         return file_response.text
 
     def create_issue(self, title: str, body: str = 'Issue Body'):
-        url = f'{repo}/issues'
+        url = f'{self.repo}/issues'
         payload = {'title': title, 'body': body}
         response = self.client.post(url, json=payload)
-        assert response.status_code == 201, f'Error creating issue for {file}: {response.status_code}'
+        assert response.status_code == 201, f'Error creating issue "{title}": {response.status_code}'
         print(f'Issue created: "{title}"')
