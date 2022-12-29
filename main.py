@@ -19,13 +19,17 @@ def main():
 
     # Loop through the files of the repository
     for file_item in github_handler.iter_github_files():
-        if file_item['name'].endswith('.py'):
-            # Read the python file
-            text = github_handler.read_file_url(file_item)
-            # Create the Issue body
-            dummy_body = ''.join(text.splitlines()[-1:])  # Just the last line of the file, for POC
-            # Create an Issue
-            github_handler.create_issue(title=file_item['name'], body=dummy_body)
+        file_name = file_item['name']
+        if not file_name.endswith('.py'):
+            print('(Skipping:', file_name, 'Not a python file)')
+            continue
+        # Read the python file
+        text = github_handler.read_file_url(file_item)
+        # Create the Issue body
+        dummy_body = ''.join(text.splitlines()[-1:])  # Just the last line of the file, for POC
+        # Create an Issue
+        print('Creating Issue for file:', file_name)
+        github_handler.create_issue(title=file_name, body=dummy_body)
 
 
 if __name__ == '__main__':
