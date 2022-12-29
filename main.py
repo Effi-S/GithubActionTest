@@ -15,22 +15,25 @@ def main():
     parser.add_argument('--token', required=True, help="Pass here: ${{ secrets.GITHUB_TOKEN }}")
     args = parser.parse_args()
 
+    print(args.user, args.repo, args.token)
     # Set up the API client
     client = requests.Session()
     client.auth = (args.token, '')
 
     # List the contents of the repository
-    url = f'https://api.github.com/repos/{args.owner}/{args.repo}/contents'
+    url = f'https://api.github.com/repos/{args.user}/{args.repo}/contents'
     response = client.get(url)
 
     if response.status_code != 200:
         print(f'Error getting files: {response.status_code}')
         return
+
     # Loop through the list of files
-    for item in response.json():
+    print(json_ := response.json())
+    for item in json_:
         if item['name'].endswith('.py'):
             # Create an Issue for each .py file
-            url = f'https://api.github.com/repos/{args.owner}/{args.repo}/issues'
+            url = f'https://api.github.com/repos/{args.user}/{args.repo}/issues'
             payload = {
                 'title': item['name'],
                 'body': 'This is the body of the issue.'
