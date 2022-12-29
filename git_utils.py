@@ -47,5 +47,6 @@ class GithubHandler:
         url = f'{self.repo}/issues'
         payload = {'title': title, 'body': body}
         response = self.client.post(url, json=payload)
-        assert response.status_code == 201, f'Error creating issue "{title}": {response.status_code}'
+        assert response.status_code == 201, f'Error creating issue "{title}": {response.status_code}\n' \
+                                            f'URL: {url}\nPayload: {payload}'
         print(f'Issue created: "{title}"')
