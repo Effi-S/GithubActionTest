@@ -25,9 +25,7 @@ def main():
     print(url := f'https://api.github.com/repos/{args.user}/{args.repo}/contents')
     response = client.get(url)
 
-    if response.status_code != 200:
-        print(f'Error getting files: {response.status_code}')
-        return
+    assert response.status_code == 200, f'Error getting files: {response.status_code}'
 
     # Loop through the list of files
     print(json_ := response.json())
