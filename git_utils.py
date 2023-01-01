@@ -55,9 +55,9 @@ class GithubHandler:
                                             f'{response.content}'
         print(f'Issue created: "{title}"')
 
-    def set_issue_status(self, iss_num: int, status: str):
+    def set_issue_state(self, iss_num: int, status: str):
         """Set the status of an issue, given its number and desired new status
-           Example: gh.set_issue_status(34, 'closed') 
+           Example: gh.set_issue_state(34, 'closed') 
         """
+        url = f'{self.repo}/issues/{iss_num}'
         return self.client.patch(url, json={'state': status})
-
