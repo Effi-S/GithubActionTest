@@ -1,4 +1,5 @@
 from pathlib import Path
+import time
 import requests
 
 
@@ -12,7 +13,7 @@ class GithubHandler:
         print('Connecting to Repo:', self.repo)
 
     def iter_github_files(self, path: str = '') -> dict:
-        """Given a URL of an endpoint in a Github Repo and a path recursively generates the file items """
+        """Generator for recursively getting all URLs to files in github repo """
 
         response = self.client.get(url := f'{self.repo}/contents/{path}')
         assert response.status_code == 200, f'Error getting files from URL: {url} ({response.status_code})'
@@ -35,7 +36,7 @@ class GithubHandler:
                 print(f'Unknown item type: {type_} ({item["path"]})')
 
     def read_file_url(self, item: str | dict) -> str:
-        """Given a URL or Json Item for a Github file, reads the content """
+        """Given a URL or Json Item for a Github file, reads the content of the file """
         if isinstance(item, dict):
             item = item['download_url']
         print('Reading:', item)
@@ -44,9 +45,19 @@ class GithubHandler:
         return file_response.text
 
     def create_issue(self, title: str, body: str = 'Issue Body'):
+        """Create a new Issue in Our Repo."""
+        time.sleep(0.3) # to avoid being kicked from the system
         url = f'{self.repo}/issues'
         payload = {'title': title, 'body': body}
         response = self.client.post(url, json=payload)
         assert response.status_code == 201, f'Error creating issue "{title}": {response.status_code}\n' \
-                                            f'URL: {url}\nPayload: {payload}'
+                                            f'URL: {url}\nPayload: {payload}\n' \
+                                            f'{response.content}'
         print(f'Issue created: "{title}"')
+
+    def set_issue_status(self, iss_num: int, status: str):
+        """Set the status of an issue, given its number and desired new status
+           Example: gh.set_issue_status(34, 'closed') 
+        """
+        return self.client.patch(url, json={'state': status})
+
